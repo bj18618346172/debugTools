@@ -4,13 +4,13 @@ let mod = '';
 let network = 'main';
 let groupId = '';
 
-const usage = "Usage: node start.js <module: 'gpk' or 'incentive'> <network: 'main' or 'test'> <groupId: hex>";
+const usage = "Usage: node start.js <module: 'gpk' or 'incentive'> <network: 'main' | 'test'|internal> <groupId: hex>";
 
 if (process.argv.length > 4) {
   mod = process.argv[2];
   network = process.argv[3];
   groupId = process.argv[4];
-  if ((!['gpk', 'incentive'].includes(mod)) || (!['main', 'test'].includes(network)) || (groupId.length != 66)) {
+  if ((!['gpk', 'incentive'].includes(mod)) || (!['main', 'test','internal'].includes(network)) || (groupId.length != 66)) {
     console.log(usage);
     process.exit(1);
   }

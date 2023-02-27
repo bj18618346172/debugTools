@@ -1,5 +1,6 @@
 const mainCfg = require('../../cfg/config-main');
 const testCfg = require('../../cfg/config-test');
+const intCfg = require('../../cfg/config-int');
 const abiMap = require('../../cfg/abi');
 const Web3 = require('web3');
 
@@ -26,7 +27,7 @@ const GpkGroupStatus = {
   3: 'Close'
 };
 
-const config = (global.network == 'main')? mainCfg : testCfg;
+const config = (global.network == 'main')? mainCfg : (global.network == 'internal')? intCfg : testCfg;
 console.log("network: %s", global.network);
 
 const web3 = new Web3(new Web3.providers.HttpProvider(config.wanNodeURL));
@@ -71,16 +72,16 @@ async function getSmgSmInfo(wkAddr) {
   };
 }
 
-async function getGpkGroupInfo(groupId, round) {
-  let info = await gpkSc.methods.getGroupInfo(groupId, round).call();
+async function getGpkGroupInfoByIndex(groupId, round,grpIndex) {
+  let info = await gpkSc.methods.getGroupInfobyIndex(groupId, round,grpIndex).call();
   return {
     round: info.queriedRound,
     // curve1: info.curve1,
-    curve1Status: GpkGroupStatus[info.curve1Status],
-    curve1StatusTime: new Date(info.curve1StatusTime * 1000).toISOString(),
+    curveStatus: GpkGroupStatus[info.curveStatus],
+    curveStatusTime: new Date(info.curveStatusTime * 1000).toISOString(),
     // curve2: info.curve2,
-    curve2Status: GpkGroupStatus[info.curve2Status],
-    curve2StatusTime: new Date(info.curve2StatusTime * 1000).toISOString()
+    //curve2Status: GpkGroupStatus[info.curve2Status],
+    //curve2StatusTime: new Date(info.curve2StatusTime * 1000).toISOString()
   }
 }
 
@@ -112,7 +113,7 @@ module.exports = {
   getSmgGroupInfo,
   getSmgSelectedSm,
   getSmgSmInfo,
-  getGpkGroupInfo,
+  getGpkGroupInfoByIndex,
   getPolyCommit,
   getSijInfo
 }
